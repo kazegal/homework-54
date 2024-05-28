@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Sell} from "./types";
 import ResetButton from "./components/ResetButton/ResetButton";
 import TriesCounts from "./components/TriesCounts/TriesCounts";
