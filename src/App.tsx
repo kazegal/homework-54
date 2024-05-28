@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, {useState} from 'react';
+import {Sell} from "./types";
+import ResetButton from "./components/ResetButton/ResetButton";
+import TriesCounts from "./components/TriesCounts/TriesCounts";
+import BoxesDesk from "./components/BoxesDesk/BoxesDesk";
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    const createItems = (): Sell[] => {
 
-export default App
+        const items: Sell[] = [];
+        for (let i = 0; i < 36; i++) {
+            const box = {hasItem: false, clicked: false};
+            items.push(box);
+        }
+
+        const randomBox = Math.floor(Math.random() * items.length);
+        items[randomBox].hasItem = true;
+
+        return items;
+    }
+
+    const reset = () => {
+        setItems(createItems());
+        setTries(0);
+    }
+
+    const [items, setItems] = useState(createItems());
+
+    const [tries, setTries] = useState(0);
+
+    const openBox = (id: number) => {
+        const itemsCopy = [...items];
+        const boxCopy = {...itemsCopy[id]};
+        boxCopy.clicked = true;
+        itemsCopy[id] = boxCopy;
+
+        setItems(itemsCopy);
+
+        if (!items[id].clicked) {
+            setTries(tries + 1);
+        }
+
+    };
+
+    return (
+        <div className="App">
+            <h2>Try to find a Medal!</h2>
+            <BoxesDesk items={items} openBox={openBox}/>
+            <ResetButton reset={reset}/>
+            <TriesCounts tries={tries}/>
+        </div>
+    );
+};
+
+export default App;
